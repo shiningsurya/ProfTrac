@@ -17,7 +17,7 @@ J = int(np.log2(N))
 out = np.zeros(J,dtype=np.double)
 ret = []
 ## c-part
-libpt = ct.cdll.LoadLibrary('/home/shining/mega/IPTA/ProfileTrack/ProfTrac/ptse')
+libpt = ct.cdll.LoadLibrary('/home/shining/mega/IPTA/ProfileTrack/ProfTrac/ptpse')
 double_p = ct.POINTER(ct.c_double)
 iin_p = iin.ctypes.data_as(double_p)
 out_p = out.ctypes.data_as(double_p)
@@ -28,8 +28,9 @@ for i in tqdm(xrange(N),desc='Shift',unit='shift',ascii=True):
     # saving output
     ret.append(out)
     # resetting out
-    out = np.zeros(J)
-    out_p = out.ctypes.data_as(double_p)
+    # out = np.zeros(J,dtype=np.double)
+    out[:] = 0.00
+    # out_p = out.ctypes.data_as(double_p)
     # cyclic shift
     iin = np.roll(iin,1)
 ## Plot part
@@ -48,4 +49,4 @@ plt.ylabel('Scale Energy')
 plt.title('Shift-Invariance')
 plt.savefig(fn+'.png')
 ## Save
-np.save(fn+'ret',ret)
+np.save(fn+'retShiftInvariance',ret)

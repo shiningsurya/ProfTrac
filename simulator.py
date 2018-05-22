@@ -10,6 +10,7 @@ SHIFTS = True
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+from tqdm import tqdm
 if len(sys.argv) < 2:
     print "Usage: python simulator.py <ROOT>"
     sys.exit(0)
@@ -31,7 +32,7 @@ peaks = np.random.rand(NPEAKS) # peak positions # this is one time
 stds  = np.random.rand(NPEAKS) * 1e-1 # STDS 
 PP    = np.zeros((NOBS,NBINS)) # this holds the profile
 MC    = np.random.choice(np.arange(NOBS),size=NPOBS) # where mode change will happen
-for i in xrange(NOBS):
+for i in tqdm(xrange(NOBS),desc='Simulation',unit='files',ascii=True):
     if i in MC:
         # mode change boi
         dc = np.random.randint(len(peaks)) # choose a random component
@@ -63,7 +64,7 @@ def ProfPlotter(prof,root,i,mc):
         plt.title('Profile simulation {0}'.format(i))
     plt.xlim([1,prof.size])
     plt.grid(True)
-    plt.savefig(root+'prof'+str(i)+'.png')
+    plt.savefig(root+'prof'+str(i).zfill(3)+'.png')
     plt.clf()
     plt.close()
 #
@@ -72,6 +73,6 @@ for i in xrange(NOBS):
         mc = True
     else:
         mc = False
-    ProfWriter(PP[i],root+'prof'+str(i)+'.prof',mc)
+    ProfWriter(PP[i],root+'prof'+str(i).zfill(3)+'.prof',mc)
     ProfPlotter(PP[i],root,i,mc)
     

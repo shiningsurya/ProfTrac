@@ -10,6 +10,7 @@ if len(sys.argv) < 2:
     sys.exit(0)
 fn = sys.argv[1] # first argument is the file name
 _, iin = np.genfromtxt(fn,skip_header=True,unpack=True)
+iin = np.array(iin,dtype=np.double)
 # signal power
 GivePower = lambda x : np.mean(np.power(x,2))
 pin = GivePower(iin) 

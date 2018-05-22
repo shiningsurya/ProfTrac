@@ -1,3 +1,6 @@
+// I want TI
+// Where is my TI?
+// Taking energy at every scale
 #include<stdio.h>
 #include<math.h>
 #include<gsl/gsl_wavelet.h>
@@ -7,8 +10,9 @@ void phi(double * , int , int , double * );
 void adder(double * , double * , int );
 void cycler(double * , int );
 void get_scale(double * , int , double * );
-void divider(double * , int ); 
+void divider(double * , int , int); 
 void meanzero(double * , int ); 
+void get_energy(double *, int, double *);
 
 int main (int argc, char **argv)
 {
@@ -31,14 +35,14 @@ int main (int argc, char **argv)
 		int di;
 		fscanf(f,"%s\n",ch);
 		for (i = 0; i < n; i++) {
-				fscanf (f, "%d %f\n", &di, &data[i]);
-				printf(" Huh %d\n",di);
+				fscanf (f, "  %d %lf\n", &di, &data[i]);
+				printf(" Huh %lf\n",data[i]);
 		}
 		fclose (f);
 		for(i = 0; i < j;i++) red[i] = 0.00;
 		// PHI call
-		phi(data, n, j, red);
-		/*get_scale(data,j,red);*/
+		/*phi(data, n, j, red);*/
+		get_energy(data,j,red);
 		// PHI call
 		f = fopen(argv[3],"w");
 		for (i = 0; i < j; i++) {
@@ -60,7 +64,7 @@ void phi(double * in, int n, int j, double * out) {
 		wave_work = gsl_wavelet_workspace_alloc(n);
 		//
 		double * data = malloc(n * sizeof(double));
-		double * acc  = malloc(n * sizeof(double));
+		double * acc  = malloc(j * sizeof(double));
 		int al;
 		/*meanzero(in,n);*/
 	    /******
@@ -69,17 +73,19 @@ void phi(double * in, int n, int j, double * out) {
 		for(al = 0; al < n; al++) { 
 				acc[al] = 0.00;
 				data[al] = in[al];
+				/*printf("In %lf\n", in[al]);*/
 		}
 		int i = 0;
 		for(;i < (n-1);i++) {
 				// work loop
 				gsl_wavelet_transform_forward(wave, data, 1, n, wave_work);
-				adder(acc,data,n);
+				get_energy(data,j,acc);
+				adder(out,acc,j);
 				for(al = 0; al < n; al++) data[al] = in[al];
 				cycler(data,n);
 		}
-		divider(acc,n);
-		get_scale(acc,j,out);
+		divider(out,j,n);
+		/*get_scale(acc,j,out);*/
 		/*divider(out,j);*/
 		// free
 		free(data);
@@ -88,9 +94,9 @@ void phi(double * in, int n, int j, double * out) {
 		gsl_wavelet_workspace_free(wave_work);
 }
 
-void divider(double * a, int n) {
+void divider(double * a, int n, int j) {
 		int i;
-		for(i = 0; i < n; i++) a[i] /= n;
+		for(i = 0; i < n; i++) a[i] /= j;
 }
 
 void meanzero(double * a, int n) {
@@ -140,4 +146,32 @@ void  get_scale(double * in, int j, double * out) {
 				out[j1] = t/wk;
 				// This is averaged
 		}
+}
+void get_energy(double * in, int j, double * out) {
+		/****
+		 * Given the wavelet transformed list of coefficients
+		 * compute energy at every scale
+		 * output in out vector of size J
+		 * *************
+		 * tested it out. this works
+		 * ***/
+		int k,j1,j2;
+		int wk;
+		double t;
+		/*printf("Are you coming here?\n");*/
+		//
+		// ignore the approx. coefficient
+		// running over J
+		/*for(k = 0; k < 1024; k++) printf("in %lf\n",in[k]);*/
+		k = 1; // this runs over `in`
+		for(j1 = 0; j1 < j; j1++) {
+				t = 0.0;
+				wk = pow(2,j1);
+				for(j2 = 0; j2 < wk; j2++)  t += pow(in[k + j2],2);//  printf(" %d %d here %lf\n",k, j2, in[k+j2]); }
+				k += wk;
+				out[j1] = t;
+				/*printf("%d\n",k);*/
+				// This is energy 
+		}
+		
 }

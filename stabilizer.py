@@ -25,7 +25,7 @@ def SafeMSE(a,b):
         aa[:a.size] = a
         return np.mean(np.power(aa-b,2))
 ##
-ls = [x for x in os.listdir(root) if fnmatch.fnmatch(x,'*.txt')] 
+ls = [x for x in os.listdir(root) if fnmatch.fnmatch(x,'*.prof')] 
 N = len(ls) # number of files
 Px = np.zeros((N,N))
 Wx = np.zeros((N,N))
@@ -36,6 +36,8 @@ for f1 in tqdm(ls,desc="File #1",unit='files',ascii=True):
     for f2 in tqdm(ls,desc="File #2", unit='files',ascii=True):
         _, i1 = np.genfromtxt(root+f1,skip_header=True,unpack=True)
         _, i2 = np.genfromtxt(root+f2,skip_header=True,unpack=True)
+        i1 = np.array(i1,dtype=np.double)
+        i2 = np.array(i2,dtype=np.double)
         N1,N2 = i1.size,i2.size
         J1,J2 = int(np.log2(N1)), int(np.log2(N2))
         out1,out2 = np.zeros(J1), np.zeros(J2)

@@ -1,3 +1,5 @@
+// I want TI
+// Where is my TI?
 #include<stdio.h>
 #include<math.h>
 #include<gsl/gsl_wavelet.h>
@@ -7,7 +9,7 @@ void phi(double * , int , int , double * );
 void adder(double * , double * , int );
 void cycler(double * , int );
 void get_scale(double * , int , double * );
-void divider(double * , int ); 
+void divider(double * , int , int); 
 void meanzero(double * , int ); 
 
 int main (int argc, char **argv)
@@ -31,8 +33,7 @@ int main (int argc, char **argv)
 		int di;
 		fscanf(f,"%s\n",ch);
 		for (i = 0; i < n; i++) {
-				fscanf (f, "%d %f\n", &di, &data[i]);
-				printf(" Huh %d\n",di);
+				fscanf (f, "%d %lf\n", &di, &data[i]);
 		}
 		fclose (f);
 		for(i = 0; i < j;i++) red[i] = 0.00;
@@ -74,12 +75,13 @@ void phi(double * in, int n, int j, double * out) {
 		for(;i < (n-1);i++) {
 				// work loop
 				gsl_wavelet_transform_forward(wave, data, 1, n, wave_work);
-				adder(acc,data,n);
+				get_scale(data,j,acc);
+				adder(out,acc,j);
 				for(al = 0; al < n; al++) data[al] = in[al];
 				cycler(data,n);
 		}
-		divider(acc,n);
-		get_scale(acc,j,out);
+		divider(out,j,n);
+		/*get_scale(acc,j,out);*/
 		/*divider(out,j);*/
 		// free
 		free(data);
@@ -88,9 +90,9 @@ void phi(double * in, int n, int j, double * out) {
 		gsl_wavelet_workspace_free(wave_work);
 }
 
-void divider(double * a, int n) {
+void divider(double * a, int n, int j) {
 		int i;
-		for(i = 0; i < n; i++) a[i] /= n;
+		for(i = 0; i < n; i++) a[i] /= j;
 }
 
 void meanzero(double * a, int n) {
