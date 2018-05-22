@@ -18,10 +18,10 @@ NN = 100
 powerx = np.linspace(0,pin,NN) # this becomes the x axis
 N = iin.size
 J = int(np.log2(N))
-out = np.zeros(J)
+out = np.zeros(J,dtype=np.double)
 ret = []
 ## c-part
-libpt = ct.cdll.LoadLibrary('/home/shining/mega/IPTA/ProfileTrack/ProfTrac/pt')
+libpt = ct.cdll.LoadLibrary('/home/shining/mega/IPTA/ProfileTrack/ProfTrac/ptpse')
 double_p = ct.POINTER(ct.c_double)
 iin_p = iin.ctypes.data_as(double_p)
 out_p = out.ctypes.data_as(double_p)

@@ -40,9 +40,9 @@ for f1 in tqdm(ls,desc="File #1",unit='files',ascii=True):
         i2 = np.array(i2,dtype=np.double)
         N1,N2 = i1.size,i2.size
         J1,J2 = int(np.log2(N1)), int(np.log2(N2))
-        out1,out2 = np.zeros(J1), np.zeros(J2)
+        out1,out2 = np.zeros(J1,dtype=np.double), np.zeros(J2,dtype=np.double)
         ## c-part
-        libpt = ct.cdll.LoadLibrary('/home/shining/mega/IPTA/ProfileTrack/ProfTrac/pt')
+        libpt = ct.cdll.LoadLibrary('/home/shining/mega/IPTA/ProfileTrack/ProfTrac/ptpse')
         double_p = ct.POINTER(ct.c_double)
         i1_p = i1.ctypes.data_as(double_p)
         out1_p = out1.ctypes.data_as(double_p)

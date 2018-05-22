@@ -13,9 +13,9 @@ if len(sys.argv) < 2:
 def GetMJD(f):
     fo = open(f,'r')
     xl = fo.readline().split(' ')
-    # print xl[0][1:]
+    # print xl
     fo.close()
-    return int(xl[0][1:])
+    return int(float(xl[1]))
 #
 root = sys.argv[1]
 ls = [x for x in os.listdir(root) if fnmatch.fnmatch(x,'*.prof')] 
@@ -30,7 +30,7 @@ for f in tqdm(ls,desc="PSR",unit='files',ascii=True):
         dater.append(GetMJD(root+f))
     except:
         print "[!!] Error here",f
-        print "[!!] At MJD",GetMJD(root+f)
+        # print "[!!] At MJD",GetMJD(root+f)
         # continue
     iin = np.array(iin,dtype=np.double) # this is goddamn important
     NN = iin.size

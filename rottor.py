@@ -1,6 +1,8 @@
 # Shows shift invariance
 ## or ?? 
 ### what if????
+## Ladies and gentlemen
+## We have shift invariance
 import numpy as np
 import ctypes as ct 
 import sys
@@ -41,12 +43,12 @@ for j in xrange(J):
     y = ret[:,j]
     # y -= np.mean(y)
     # y /= np.std(y)
-    plt.plot(x,y,label='J = {}'.format(j))
+    plt.plot(x,y,label='J = {0}, $\sigma$ = {1:1.2e}'.format(j,np.std(y)))
 plt.xlabel('Shift')
 plt.grid(True)
 plt.legend(loc='best')
 plt.ylabel('Scale Energy')
 plt.title('Shift-Invariance')
-plt.savefig(fn+'.png')
+plt.savefig(fn+'ShiftInvariance.png')
 ## Save
 np.save(fn+'retShiftInvariance',ret)
