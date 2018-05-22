@@ -18,7 +18,9 @@ def running_mean(x, N):
     cumsum = np.cumsum(np.insert(x, 0, 0)) 
     return (cumsum[N:] - cumsum[:-N]) / float(N)
 #
-ret = np.load(sys.argv[1])
+ld = np.load(sys.argv[1])
+dater, ret = ld[:,0] , ld[:,1:]
+# print dater.shape, ret.shape
 ret = ret[~np.isnan(ret).any(axis=1)]
 N,J = ret.shape
 # drop nans
@@ -56,12 +58,12 @@ if choice == 1:
         # bringing it to [-0.5,0.5]
         plt.plot(jj + y)
         jj = jj + 1
-    plt.xlabel('# Obs')
+    plt.xlabel('MJD')
     plt.xlim([0,N-1])
-    plt.ylabel('Scale [J]')
+    plt.ylabel('Average %age of Energy Scale J')
     plt.yticks(np.arange(J),yJ)
     plt.grid(True)
-    plt.xticks(np.arange(N),rotation=90)
+    plt.xticks(np.arange(N),dater,rotation=75,fontsize=8)
     plt.title('ProfileTrack')
     plt.show()
 elif choice == 2:
